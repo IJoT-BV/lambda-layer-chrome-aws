@@ -57,8 +57,8 @@ jobs:
       - name: Upload to S3
         run: |
           S3_URI="s3://${{ env.S3_BUCKET_NAME }}/${{ env.LAYER_NAME }}/${{ env.FILENAME }}"
-          aws s3 cp ${{ env.FILEPATH  }} ${ S3_URI }
-          echo "S3_URI=${ S3_URI }" >> $GITHUB_ENV
+          aws s3 cp ${{ env.FILEPATH  }} ${S3_URI}
+          echo "S3_URI=${S3_URI}" >> $GITHUB_ENV
 
       - name: Commit Tag Version
         run: |
