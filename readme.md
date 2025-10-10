@@ -1,5 +1,5 @@
 # Google Chrome for AWS Lambda as a layer
-# Forked from: https://github.com/shelfio/chrome-aws-lambda-layer
+Forked from: [shelfio/chrome-aws-lambda-layer](https://github.com/shelfio/chrome-aws-lambda-layer)
 
 > 58 MB Google Chrome to fit inside AWS Lambda Layer compressed with Brotli
 
