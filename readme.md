@@ -5,7 +5,7 @@ Forked from: [shelfio/chrome-aws-lambda-layer](https://github.com/shelfio/chrome
 
 [Sparticuz/chromium](https://github.com/Sparticuz/chromium) published as a Lambda Layer.
 
-Tested with Node.js 16x/18x. Compatible with x86_64 only. Has Chromium v140.0.0
+Tested with Node.js 16x/18x. Compatible with x86_64 only. Has Chromium v141.0.0
 
 ## Getting Started
 
