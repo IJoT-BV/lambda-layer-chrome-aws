@@ -71,3 +71,18 @@ jobs:
           git add .tag_version
           git commit -m "Update tag version to ${{ env.TAG_VERSION }}"
           git push
+
+      - name: Update README
+        if: steps.latest_release.outputs.tag_unchanged != 'true'
+        run: |
+          TAG_VERSION=${{ env.TAG_VERSION }}
+          sed -i -e "s|Has Chromium v[0-9\.]*|Has Chromium $TAG_VERSION|g" readme.md
+
+      - name: Commit and Push README
+        if: steps.latest_release.outputs.tag_unchanged != 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add readme.md
+          git commit -m "Update README with new version details ${{ env.TAG_VERSION }}"
+          git push
