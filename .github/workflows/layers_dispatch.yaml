@@ -29,7 +29,7 @@ jobs:
 
       - name: Get Previous Tag Version
         id: prev_tag_version
-        run: echo "::set-output name=tag::$(cat .tag_version || echo '')"
+        run: echo "name=tag::$(cat .tag_version || echo '')" >> $GITHUB_OUTPUT
 
       - name: Get Latest Release URL and Tag Version
         id: latest_release
