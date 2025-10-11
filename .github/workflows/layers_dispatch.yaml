@@ -39,7 +39,7 @@ jobs:
           TAG_VERSION=$(echo $JSON_RESPONSE | grep -Po '"tag_name": "\K[^"]+')
           if [[ "$TAG_VERSION" == "${{ steps.prev_tag_version.outputs.tag }}" ]]; then
             echo "Skipping as the tag version is the same as the previous run."
-            run echo "tag_unchanged=true"
+            echo "tag_unchanged=true" >> $GITHUB_OUTPUT
           fi
           echo "LATEST_RELEASE_URL=$LATEST_RELEASE_URL" >> $GITHUB_ENV
           echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
