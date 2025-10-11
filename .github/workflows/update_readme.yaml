@@ -34,10 +34,18 @@ jobs:
       - name: Update README
         run: |
           TAG_VERSION=${{ env.TAG_VERSION }}
-
           sed -i -e "s|Has Chromium v[0-9\.]*|Has Chromium $TAG_VERSION|g" readme.md
 
+          # Check if readme.md is modified.
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes detected"
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Commit and Push
+        if: steps.git-check.outputs.changes == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
