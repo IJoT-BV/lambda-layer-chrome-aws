@@ -1,9 +1,9 @@
 name: Update README
 
 on:
-#  push:
-#    branches:
-#      - master
+  #  push:
+  #    branches:
+  #      - master
   workflow_run:
     workflows: ["Deploy Layers"]
     types:
@@ -40,12 +40,6 @@ jobs:
           ARN_SUFFIX=":764866452798:layer:chrome-aws-lambda:"
 
           sed -i -e "s|Has Chromium v[0-9\.]*|Has Chromium $TAG_VERSION|g" readme.md
-
-          for REGION in ${{ env.AWS_REGIONS }}; do
-            LAYER_VERSION=$(aws lambda list-layer-versions --layer-name chrome-aws-lambda --region $REGION --query 'LayerVersions[0].LayerVersionArn' --output text | grep -oE '[0-9]+$')
-            ARN="$ARN_BASE$REGION$ARN_SUFFIX$LAYER_VERSION"
-            sed -i -e "s|arn:aws:lambda:$REGION:[0-9]*:layer:chrome-aws-lambda:[0-9]*|$ARN|g" readme.md
-          done
 
       - name: Commit and Push
         run: |
