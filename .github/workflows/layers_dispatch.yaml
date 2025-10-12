@@ -11,6 +11,7 @@ env:
   LAYER_NAME: lambda-layer-chrome-aws
   S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_GITHUB_ARTIFACTS }}
   AWS_REGION: ${{ secrets.AWS_REGION  || 'eu-central-1' }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 permissions:
   contents: write
@@ -51,7 +52,7 @@ jobs:
       - name: Get Latest Release URL and Tag Version
         id: latest_release
         run: |
-          JSON_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/Sparticuz/chromium/releases/latest)
+          JSON_RESPONSE=$(curl -s -H "Authorization: token ${{ env.GITHUB_TOKEN }}" https://api.github.com/repos/Sparticuz/chromium/releases/latest)
           LATEST_RELEASE_URL_X64=$(echo $JSON_RESPONSE | grep -Po '"browser_download_url": "\K[^"]+\.x64\.zip' | awk 'NR==1')
           LATEST_RELEASE_URL_ARM64=$(echo $JSON_RESPONSE | grep -Po '"browser_download_url": "\K[^"]+\.arm64\.zip' | awk 'NR==1')
           TAG_VERSION=$(echo $JSON_RESPONSE | grep -Po '"tag_name": "\K[^"]+')
