@@ -70,8 +70,8 @@ jobs:
           echo "LATEST_RELEASE_URL_X64=$LATEST_RELEASE_URL_X64" >> $GITHUB_ENV
           echo "LATEST_RELEASE_URL_ARM64=$LATEST_RELEASE_URL_ARM64" >> $GITHUB_ENV
           echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
-          echo "FILENAME_X64=lambda-layer-chromium-$TAG_VERSION.x64.zip" >> $GITHUB_ENV
-          echo "FILENAME_ARM64=lambda-layer-chromium-$TAG_VERSION.arm64.zip" >> $GITHUB_ENV
+          echo "FILENAME_X64=${{ env.LAYER_NAME }}-$TAG_VERSION.x64.zip" >> $GITHUB_ENV
+          echo "FILENAME_ARM64=${{ env.LAYER_NAME }}-$TAG_VERSION.arm64.zip" >> $GITHUB_ENV
 
       - name: Download Latest X64 Release
         if: steps.latest_release.outputs.tag_unchanged != 'true'
@@ -109,8 +109,8 @@ jobs:
           echo ${{ env.TAG_VERSION }} > .tag_version
           TAG_VERSION=${{ env.TAG_VERSION }}
           sed -i -e "s|Uses Chromium v[0-9\.]*|Uses Chromium $TAG_VERSION|g" readme.md
-          sed -i -e "s|lambda-layer-chromium-v[0-9\.]*\.x64\.zip|lambda-layer-chromium-$TAG_VERSION.x64.zip|g" readme.md
-          sed -i -e "s|lambda-layer-chromium-v[0-9\.]*\.arm64\.zip|lambda-layer-chromium-$TAG_VERSION.arm64.zip|g" readme.md
+          sed -i -e "s|${{ env.LAYER_NAME }}-v[0-9\.]*\.x64\.zip|${{ env.LAYER_NAME }}-$TAG_VERSION.x64.zip|g" readme.md
+          sed -i -e "s|${{ env.LAYER_NAME }}-v[0-9\.]*\.arm64\.zip|${{ env.LAYER_NAME }}-$TAG_VERSION.arm64.zip|g" readme.md
 
       - name: Commit and Push Changes
         if: steps.latest_release.outputs.tag_unchanged != 'true'
@@ -126,13 +126,13 @@ jobs:
         uses: softprops/action-gh-release@6da8fa9354ddfdc4aeace5fc48d7f679b5214090 # v2.2.0
         with:
           tag_name: v${{ github.run_number }}
-          name: ${{ env.LAYER_NAME }} v${{ env.TAG_VERSION}}.${{ github.run_number }}
+          name: ${{ env.LAYER_NAME }} ${{ env.TAG_VERSION}}.${{ github.run_number }}
           body: |
             ## ${{ env.LAYER_NAME }}
 
             **Size (x64):** ${{ env.ZIP_SIZE_X64 }}
             **Size (arm64):** ${{ env.ZIP_SIZE_ARM64 }}
-            **S3 Location (x64):** ${{ env.S3_URI_X64 }}
+            **S3 Location (x64):** `${{ env.S3_URI_X64 }}`
             **S3 Location (arm64):** `${{ env.S3_URI_ARM64 }}`
             **AWS Region:** ${{ env.AWS_REGION }}
 
