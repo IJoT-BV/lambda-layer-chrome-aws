@@ -7,7 +7,7 @@ Forked from: [shelfio/chrome-aws-lambda-layer](https://github.com/shelfio/chrome
 
 Tested with Node.js 16x/18x/20x. Compatible with both x86_64 (x64) and arm64 architectures.
 
-Uses Chromium v141.0.0
+Uses Chromium v140.0.0
 
 ## GitHub Secrets Configuration
 
@@ -69,7 +69,7 @@ resource "aws_lambda_layer_version" "chrome_aws_layer" {
   description         = "Chrome AWS Lambda Layer"
   
   s3_bucket = "YOUR_BUCKET_NAME"
-  s3_key    = "lambda-layer-chrome-aws/lambda-layer-chrome-aws-v141.0.0.x64.zip"
+  s3_key    = "lambda-layer-chrome-aws/lambda-layer-chrome-aws-v140.0.0.x64.zip"
 }
 
 layers = [
@@ -86,7 +86,7 @@ resource "aws_lambda_layer_version" "chrome_aws_layer" {
   description         = "Chrome AWS Lambda Layer"
   
   s3_bucket = "YOUR_BUCKET_NAME"
-  s3_key    = "lambda-layer-chrome-aws/lambda-layer-chrome-aws-v141.0.0.arm64.zip"
+  s3_key    = "lambda-layer-chrome-aws/lambda-layer-chrome-aws-v140.0.0.arm64.zip"
 }
 
 layers = [
