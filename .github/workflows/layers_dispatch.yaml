@@ -83,7 +83,7 @@ jobs:
         if: steps.latest_release.outputs.tag_unchanged != 'true'
         run: |
           curl -L -o ${{ env.FILENAME_X64}} ${{ env.LATEST_RELEASE_URL_ARM64 }}
-          echo "ZIP_SIZE_ARM64=$(du -h $FILEPATH | cut -f1)" >> $GITHUB_ENV
+          echo "ZIP_SIZE_ARM64=$(du -h ${{ env.FILENAME_ARM64 }} | cut -f1)" >> $GITHUB_ENV
 
       - name: Upload x64 Release to S3
         if: steps.latest_release.outputs.tag_unchanged != 'true'
