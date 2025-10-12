@@ -11,13 +11,6 @@ Uses Chromium v140.0.0
 
 ## Getting Started
 
-Click on Layers and choose "Add a layer", and "Provide a layer version
-ARN" and enter the following ARN.
-
-```
-arn:aws:lambda:us-east-1:764866452798:layer:chrome-aws-lambda:50
-```
-
 When importing the module within lambda, make sure you import `@sparticuz/chromium` not `chrome-aws-lambda`
 
 ```js
@@ -78,4 +71,4 @@ indicated.
 
 ## License
 
-MIT © [Shelf](https://shelf.io), (C) 2025 IJoT BV
+MIT © [Shelf](https://shelf.io), © 2025 IJoT BV
