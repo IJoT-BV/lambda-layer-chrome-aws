@@ -10,7 +10,7 @@ on:
 env:
   LAYER_NAME: lambda-layer-chrome-aws
   S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_GITHUB_ARTIFACTS }}
-  AWS_REGION: ${{ secrets.AWS_REGION  || 'eu-central-1' }}
+  AWS_REGION: ${{ secrets.AWS_REGION != '' && secrets.AWS_REGION || 'eu-central-1' }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 permissions:
@@ -89,14 +89,14 @@ jobs:
         if: steps.latest_release.outputs.tag_unchanged != 'true'
         run: |
           S3_URI="s3://${{ env.S3_BUCKET_NAME }}/${{ env.LAYER_NAME }}/${{ env.FILENAME_X64 }}"
-          aws s3 cp ${{ env.FILENAME_X64  }} ${S3_URI}
+          aws s3 cp ${{ env.FILENAME_X64 }} ${S3_URI}
           echo "S3_URI_X64=${S3_URI}" >> $GITHUB_ENV
 
       - name: Upload arm64 Release to S3
         if: steps.latest_release.outputs.tag_unchanged != 'true'
         run: |
           S3_URI="s3://${{ env.S3_BUCKET_NAME }}/${{ env.LAYER_NAME }}/${{ env.FILENAME_ARM64 }}"
-          aws s3 cp ${{ env.FILENAME_ARM64  }} ${S3_URI}
+          aws s3 cp ${{ env.FILENAME_ARM64 }} ${S3_URI}
           echo "S3_URI_ARM64=${S3_URI}" >> $GITHUB_ENV
 
       - name: Update Version Files
@@ -121,8 +121,8 @@ jobs:
         if: steps.latest_release.outputs.tag_unchanged != 'true'
         uses: softprops/action-gh-release@6da8fa9354ddfdc4aeace5fc48d7f679b5214090 # v2.2.0
         with:
-          tag_name: v${{ github.run_number }}
-          name: ${{ env.LAYER_NAME }} ${{ env.TAG_VERSION}}.${{ github.run_number }}
+          tag_name: ${{ env.TAG_VERSION }}
+          name: ${{ env.LAYER_NAME }} ${{ env.TAG_VERSION }}
           body: |
             ## ${{ env.LAYER_NAME }}
 
