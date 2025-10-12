@@ -82,7 +82,7 @@ jobs:
       - name: Download Latest ARM64 Release
         if: steps.latest_release.outputs.tag_unchanged != 'true'
         run: |
-          curl -L -o ${{ env.FILENAME_X64}} ${{ env.LATEST_RELEASE_URL_ARM64 }}
+          curl -L -o ${{ env.FILENAME_ARM64}} ${{ env.LATEST_RELEASE_URL_ARM64 }}
           echo "ZIP_SIZE_ARM64=$(du -h ${{ env.FILENAME_ARM64 }} | cut -f1)" >> $GITHUB_ENV
 
       - name: Upload x64 Release to S3
