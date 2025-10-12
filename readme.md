@@ -7,7 +7,7 @@ Forked from: [shelfio/chrome-aws-lambda-layer](https://github.com/shelfio/chrome
 
 Tested with Node.js 16x/18x/20x. Compatible with both x86_64 (x64) and arm64 architectures.
 
-Uses Chromium v140.0.0
+Uses Chromium v141.0.0
 
 ## GitHub Secrets Configuration
 
