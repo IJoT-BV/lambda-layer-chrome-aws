@@ -76,31 +76,27 @@ jobs:
       - name: Download Latest X64 Release
         if: steps.latest_release.outputs.tag_unchanged != 'true'
         run: |
-          curl -LO ${{ env.LATEST_RELEASE_URL_X64 }}
-          FILEPATH=$(basename ${{ env.LATEST_RELEASE_URL_X64 }})
-          echo "FILEPATH_X64=$FILEPATH" >> $GITHUB_ENV
-          echo "ZIP_SIZE_X64=$(du -h $FILEPATH | cut -f1)" >> $GITHUB_ENV
+          curl -L -o ${{ env.FILENAME_X64}} ${{ env.LATEST_RELEASE_URL_X64 }}
+          echo "ZIP_SIZE_X64=$(du -h ${{ env.FILENAME_X64 }} | cut -f1)" >> $GITHUB_ENV
 
       - name: Download Latest ARM64 Release
         if: steps.latest_release.outputs.tag_unchanged != 'true'
         run: |
-          curl -LO ${{ env.LATEST_RELEASE_URL_ARM64 }}
-          FILEPATH=$(basename ${{ env.LATEST_RELEASE_URL_ARM64 }})
-          echo "FILEPATH_ARM64=$FILEPATH" >> $GITHUB_ENV
+          curl -L -o ${{ env.FILENAME_X64}} ${{ env.LATEST_RELEASE_URL_ARM64 }}
           echo "ZIP_SIZE_ARM64=$(du -h $FILEPATH | cut -f1)" >> $GITHUB_ENV
 
       - name: Upload x64 Release to S3
         if: steps.latest_release.outputs.tag_unchanged != 'true'
         run: |
           S3_URI="s3://${{ env.S3_BUCKET_NAME }}/${{ env.LAYER_NAME }}/${{ env.FILENAME_X64 }}"
-          aws s3 cp ${{ env.FILEPATH_X64  }} ${S3_URI}
+          aws s3 cp ${{ env.FILENAME_X64  }} ${S3_URI}
           echo "S3_URI_X64=${S3_URI}" >> $GITHUB_ENV
 
       - name: Upload arm64 Release to S3
         if: steps.latest_release.outputs.tag_unchanged != 'true'
         run: |
           S3_URI="s3://${{ env.S3_BUCKET_NAME }}/${{ env.LAYER_NAME }}/${{ env.FILENAME_ARM64 }}"
-          aws s3 cp ${{ env.FILEPATH_ARM64  }} ${S3_URI}
+          aws s3 cp ${{ env.FILENAME_ARM64  }} ${S3_URI}
           echo "S3_URI_ARM64=${S3_URI}" >> $GITHUB_ENV
 
       - name: Update Version Files
