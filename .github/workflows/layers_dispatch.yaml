@@ -12,6 +12,10 @@ env:
   S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_GITHUB_ARTIFACTS }}
   AWS_REGION: ${{ secrets.AWS_REGION  || 'eu-central-1' }}
 
+permissions:
+  contents: write
+  pull-requests: read
+
 jobs:
   sonarqube:
     name: SonarQube
@@ -27,6 +31,7 @@ jobs:
 
   check_release:
     runs-on: ubuntu-latest
+    needs: sonarqube
 
     steps:
       - name: Checkout
@@ -46,10 +51,17 @@ jobs:
       - name: Get Latest Release URL and Tag Version
         id: latest_release
         run: |
-          JSON_RESPONSE=$(curl -s https://api.github.com/repos/Sparticuz/chromium/releases/latest)
+          JSON_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/Sparticuz/chromium/releases/latest)
           LATEST_RELEASE_URL_X64=$(echo $JSON_RESPONSE | grep -Po '"browser_download_url": "\K[^"]+\.x64\.zip' | awk 'NR==1')
           LATEST_RELEASE_URL_ARM64=$(echo $JSON_RESPONSE | grep -Po '"browser_download_url": "\K[^"]+\.arm64\.zip' | awk 'NR==1')
           TAG_VERSION=$(echo $JSON_RESPONSE | grep -Po '"tag_name": "\K[^"]+')
+
+          # Validate URLs were found
+          if [[ -z "$LATEST_RELEASE_URL_X64" ]] || [[ -z "$LATEST_RELEASE_URL_ARM64" ]]; then
+            echo "Error: Failed to extract download URLs"
+            exit 1
+          fi
+
           if [[ "$TAG_VERSION" == "${{ steps.prev_tag_version.outputs.tag }}" ]]; then
             echo "Skipping as the tag version is the same as the previous run."
             echo "tag_unchanged=true" >> $GITHUB_OUTPUT
@@ -59,10 +71,6 @@ jobs:
           echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
           echo "FILENAME_X64=lambda-layer-chromium-$TAG_VERSION.x64.zip" >> $GITHUB_ENV
           echo "FILENAME_ARM64=lambda-layer-chromium-$TAG_VERSION.arm64.zip" >> $GITHUB_ENV
-
-      - name: Update Tag Version
-        if: steps.latest_release.outputs.tag_unchanged != 'true'
-        run: echo ${{ env.TAG_VERSION }} > .tag_version
 
       - name: Download Latest X64 Release
         if: steps.latest_release.outputs.tag_unchanged != 'true'
@@ -92,26 +100,18 @@ jobs:
           aws s3 cp ${{ env.FILEPATH_ARM64  }} ${S3_URI}
           echo "S3_URI_ARM64=${S3_URI}" >> $GITHUB_ENV
 
-      - name: Commit Tag Version
+      - name: Update Version Files
         if: steps.latest_release.outputs.tag_unchanged != 'true'
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .tag_version
-          git commit -m "Update tag version to ${{ env.TAG_VERSION }}"
-          git push
-
-      - name: Update README
-        if: steps.latest_release.outputs.tag_unchanged != 'true'
-        run: |
+          echo ${{ env.TAG_VERSION }} > .tag_version
           TAG_VERSION=${{ env.TAG_VERSION }}
           sed -i -e "s|Has Chromium v[0-9\.]*|Has Chromium $TAG_VERSION|g" readme.md
 
-      - name: Commit and Push README
+      - name: Commit and Push Changes
         if: steps.latest_release.outputs.tag_unchanged != 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add readme.md
-          git commit -m "Update README with new version details ${{ env.TAG_VERSION }}"
+          git add .tag_version readme.md
+          git commit -m "Update to Chromium ${{ env.TAG_VERSION }}"
           git push
