@@ -107,6 +107,8 @@ jobs:
           echo ${{ env.TAG_VERSION }} > .tag_version
           TAG_VERSION=${{ env.TAG_VERSION }}
           sed -i -e "s|Has Chromium v[0-9\.]*|Has Chromium $TAG_VERSION|g" readme.md
+          sed -i -e "s|lambda-layer-chromium-v[0-9\.]*\.x64\.zip|lambda-layer-chromium-$TAG_VERSION.x64.zip|g" readme.md
+          sed -i -e "s|lambda-layer-chromium-v[0-9\.]*\.arm64\.zip|lambda-layer-chromium-$TAG_VERSION.arm64.zip|g" readme.md
 
       - name: Commit and Push Changes
         if: steps.latest_release.outputs.tag_unchanged != 'true'
