@@ -44,7 +44,7 @@ resource "aws_lambda_layer_version" "chrome_aws_layer" {
   description         = "Chrome AWS Lambda Layer"
   
   s3_bucket = "<Bucket Location>"
-  s3_key    = "lambda-layer-chrome-aws/lambda-layer-chromium-v140.0.0.x64.zip"
+  s3_key    = "lambda-layer-chrome-aws/lambda-layer-chromium-v141.0.0.x64.zip"
 }
 
 layers = [
@@ -61,7 +61,7 @@ resource "aws_lambda_layer_version" "chrome_aws_layer" {
   description         = "Chrome AWS Lambda Layer"
   
   s3_bucket = "<Bucket Location>"
-  s3_key    = "lambda-layer-chrome-aws/lambda-layer-chromium-v140.0.0.arm64.zip"
+  s3_key    = "lambda-layer-chrome-aws/lambda-layer-chromium-v141.0.0.arm64.zip"
 }
 
 layers = [
