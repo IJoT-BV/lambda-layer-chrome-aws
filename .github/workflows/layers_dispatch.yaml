@@ -119,7 +119,7 @@ jobs:
 
       - name: Create GitHub Release (optional)
         if: steps.latest_release.outputs.tag_unchanged != 'true'
-        uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.2.0
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.2.0
         with:
           tag_name: ${{ env.TAG_VERSION }}
           name: ${{ env.LAYER_NAME }} ${{ env.TAG_VERSION }}
